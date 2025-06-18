@@ -55,7 +55,7 @@ struct ContentView: View {
         .tag(3)
       
       // Search Tab
-      Text("Search")
+      searchView
         .tabItem {
           Image(systemName: "magnifyingglass")
           Text("Search")
@@ -114,6 +114,200 @@ struct ContentView: View {
       }
       .padding()
     }
+  }
+  
+  // MARK: - Search View
+  
+  private var searchView: some View {
+    NavigationView {
+      VStack(spacing: 0) {
+        // Header with location and back button
+        searchHeaderSection
+        
+        // Search bar
+        searchBarSection
+        
+        // Filter tabs
+        filterTabsSection
+        
+        ScrollView {
+          VStack(alignment: .leading, spacing: 24) {
+            // Book a ride section
+            bookRideSection
+            
+            // Recent & popular section
+            recentPopularSection
+            
+            // Recommended section
+            recommendedSection
+          }
+          .padding(.horizontal, 16)
+        }
+      }
+      .navigationBarHidden(true)
+    }
+  }
+  
+  // MARK: - Search Header Section
+  
+  private var searchHeaderSection: some View {
+    HStack {
+      Button(action: {}) {
+        Image(systemName: "arrow.left")
+          .font(.system(size: 20))
+          .foregroundColor(.black)
+      }
+      
+      VStack(alignment: .leading, spacing: 2) {
+        Text("Your location")
+          .font(.system(size: 14))
+          .foregroundColor(.gray)
+        
+        HStack {
+          Text("Lobby")
+            .font(.system(size: 20, weight: .medium))
+            .foregroundColor(.black)
+          
+          Image(systemName: "chevron.down")
+            .font(.system(size: 16))
+            .foregroundColor(.black)
+        }
+      }
+      
+      Spacer()
+    }
+    .padding(.horizontal, 16)
+    .padding(.vertical, 12)
+  }
+  
+  // MARK: - Search Bar Section
+  
+  private var searchBarSection: some View {
+    HStack {
+      Image(systemName: "magnifyingglass")
+        .font(.system(size: 16))
+        .foregroundColor(.gray)
+      
+      Text("Search places")
+        .font(.system(size: 16))
+        .foregroundColor(.gray)
+      
+      Spacer()
+    }
+    .padding(.horizontal, 16)
+    .padding(.vertical, 12)
+    .background(Color.gray.opacity(0.1))
+    .cornerRadius(12)
+    .padding(.horizontal, 16)
+    .padding(.bottom, 16)
+  }
+  
+  // MARK: - Filter Tabs Section
+  
+  private var filterTabsSection: some View {
+    HStack(spacing: 12) {
+      FilterTab(title: "All", isSelected: true)
+      FilterTab(title: "Transport", isSelected: false, icon: "car.fill")
+      FilterTab(title: "Food", isSelected: false, icon: "fork.knife")
+      
+      Spacer()
+    }
+    .padding(.horizontal, 16)
+    .padding(.bottom, 24)
+  }
+  
+  // MARK: - Book Ride Section
+  
+  private var bookRideSection: some View {
+    VStack(alignment: .leading, spacing: 16) {
+      Text("Book a ride")
+        .font(.system(size: 20, weight: .bold))
+        .foregroundColor(.black)
+      
+      VStack(spacing: 12) {
+        LocationItem(
+          icon: "house.fill",
+          iconColor: .green,
+          title: "Home",
+          subtitle: "10km • Basement Lobby, Tower 10 (Units 36-42), 10 Sims Dri...",
+          showRecentlyUsed: true
+        )
+        
+        LocationItem(
+          icon: "location.fill",
+          iconColor: .green,
+          title: "Kick Off! (formerly Kovan Sports Centre)",
+          subtitle: "13km • 60 Hougang Street 21, Singapore, 538738",
+          showRecentlyUsed: false
+        )
+        
+        LocationItem(
+          icon: "clock.fill",
+          iconColor: .black,
+          title: "Terminal 3 Departure - Changi Airport",
+          subtitle: "23km • 65 Airport Boulevard, Singapore, 819663",
+          showRecentlyUsed: true
+        )
+      }
+    }
+  }
+  
+  // MARK: - Recent & Popular Section
+  
+  private var recentPopularSection: some View {
+    VStack(alignment: .leading, spacing: 16) {
+      Text("Recent & popular")
+        .font(.system(size: 20, weight: .bold))
+        .foregroundColor(.black)
+      
+      LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 3), spacing: 12) {
+        RecentPopularItem(icon: "clock.fill", title: "terminal 3")
+        RecentPopularItem(icon: "arrow.up.right", title: "mcdonald's", iconColor: .orange)
+        RecentPopularItem(icon: "clock.fill", title: "changi")
+        RecentPopularItem(icon: "arrow.up.right", title: "cake", iconColor: .orange)
+        RecentPopularItem(icon: "clock.fill", title: "bouna vista")
+        RecentPopularItem(icon: "arrow.up.right", title: "chagee", iconColor: .orange)
+      }
+    }
+  }
+  
+  // MARK: - Recommended Section
+  
+  private var recommendedSection: some View {
+    VStack(alignment: .leading, spacing: 16) {
+      Text("Recommended")
+        .font(.system(size: 20, weight: .bold))
+        .foregroundColor(.black)
+      
+      ScrollView(.horizontal, showsIndicators: false) {
+        HStack(spacing: 12) {
+          RecommendedCard(
+            title: "Mr. Coconut - Connexis",
+            distance: "1.0km",
+            rating: "4.7",
+            imageUrl: "https://images.unsplash.com/photo-1546173159-315724a31696?w=300&h=200&fit=crop"
+          )
+          
+          RecommendedCard(
+            title: "KOI Thé - Anchorpoint Sh...",
+            distance: "1.4km",
+            rating: "4.8",
+            imageUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop"
+          )
+          
+          RecommendedCard(
+            title: "Straits Club Alexandra - Buki...",
+            distance: "1.4km",
+            rating: "4.1",
+            imageUrl: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=300&h=200&fit=crop",
+            isAd: true
+          )
+        }
+        .padding(.horizontal, 16)
+      }
+      .padding(.horizontal, -16)
+    }
+    .padding(.bottom, 100)
   }
   
   // MARK: - Header Section
@@ -496,7 +690,183 @@ struct DiscoverCard: View {
   }
 }
 
+// MARK: - Search Supporting Views
 
+struct FilterTab: View {
+  let title: String
+  let isSelected: Bool
+  let icon: String?
+  
+  init(title: String, isSelected: Bool, icon: String? = nil) {
+    self.title = title
+    self.isSelected = isSelected
+    self.icon = icon
+  }
+  
+  var body: some View {
+    HStack(spacing: 6) {
+      if let icon = icon {
+        Image(systemName: icon)
+          .font(.system(size: 14))
+          .foregroundColor(isSelected ? .white : .gray)
+      }
+      
+      Text(title)
+        .font(.system(size: 14, weight: .medium))
+        .foregroundColor(isSelected ? .white : .gray)
+    }
+    .padding(.horizontal, 16)
+    .padding(.vertical, 8)
+    .background(isSelected ? Color.green : Color.gray.opacity(0.1))
+    .cornerRadius(20)
+  }
+}
+
+struct LocationItem: View {
+  let icon: String
+  let iconColor: Color
+  let title: String
+  let subtitle: String
+  let showRecentlyUsed: Bool
+  
+  var body: some View {
+    HStack(spacing: 12) {
+      Circle()
+        .fill(iconColor.opacity(0.1))
+        .frame(width: 40, height: 40)
+        .overlay(
+          Image(systemName: icon)
+            .font(.system(size: 18))
+            .foregroundColor(iconColor)
+        )
+      
+      VStack(alignment: .leading, spacing: 4) {
+        Text(title)
+          .font(.system(size: 16, weight: .medium))
+          .foregroundColor(.black)
+        
+        Text(subtitle)
+          .font(.system(size: 14))
+          .foregroundColor(.gray)
+          .lineLimit(1)
+        
+        if showRecentlyUsed {
+          HStack(spacing: 4) {
+            Image(systemName: "star.fill")
+              .font(.system(size: 12))
+              .foregroundColor(.green)
+            
+            Text("Recently used")
+              .font(.system(size: 12))
+              .foregroundColor(.green)
+          }
+        }
+      }
+      
+      Spacer()
+    }
+    .padding(.vertical, 8)
+  }
+}
+
+struct RecentPopularItem: View {
+  let icon: String
+  let title: String
+  let iconColor: Color
+  
+  init(icon: String, title: String, iconColor: Color = .gray) {
+    self.icon = icon
+    self.title = title
+    self.iconColor = iconColor
+  }
+  
+  var body: some View {
+    HStack(spacing: 8) {
+      Image(systemName: icon)
+        .font(.system(size: 14))
+        .foregroundColor(iconColor)
+      
+      Text(title)
+        .font(.system(size: 14))
+        .foregroundColor(.black)
+        .lineLimit(1)
+      
+      Spacer(minLength: 0)
+    }
+    .padding(.horizontal, 12)
+    .padding(.vertical, 10)
+    .background(Color.gray.opacity(0.1))
+    .cornerRadius(20)
+  }
+}
+
+struct RecommendedCard: View {
+  let title: String
+  let distance: String
+  let rating: String
+  let imageUrl: String
+  let isAd: Bool
+  
+  init(title: String, distance: String, rating: String, imageUrl: String, isAd: Bool = false) {
+    self.title = title
+    self.distance = distance
+    self.rating = rating
+    self.imageUrl = imageUrl
+    self.isAd = isAd
+  }
+  
+  var body: some View {
+    VStack(alignment: .leading, spacing: 8) {
+      AsyncImage(url: URL(string: imageUrl)) { image in
+        image
+          .resizable()
+          .aspectRatio(contentMode: .fill)
+      } placeholder: {
+        Color.gray.opacity(0.3)
+      }
+      .frame(width: 150, height: 100)
+      .clipShape(.rect(cornerRadius: 8, style: .continuous))
+      
+      VStack(alignment: .leading, spacing: 4) {
+        Text(title)
+          .font(.system(size: 14, weight: .medium))
+          .foregroundColor(.black)
+          .lineLimit(2)
+        
+        HStack(spacing: 4) {
+          if isAd {
+            Text("Ad")
+              .font(.system(size: 12))
+              .foregroundColor(.gray)
+            
+            Text("•")
+              .font(.system(size: 12))
+              .foregroundColor(.gray)
+          }
+          
+          Text(distance)
+            .font(.system(size: 12))
+            .foregroundColor(.gray)
+          
+          Text("•")
+            .font(.system(size: 12))
+            .foregroundColor(.gray)
+          
+          HStack(spacing: 2) {
+            Image(systemName: "star.fill")
+              .font(.system(size: 10))
+              .foregroundColor(.yellow)
+            
+            Text(rating)
+              .font(.system(size: 12))
+              .foregroundColor(.gray)
+          }
+        }
+      }
+    }
+    .frame(width: 150)
+  }
+}
 
 #Preview {
   ContentView()
