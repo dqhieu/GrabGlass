@@ -31,12 +31,12 @@ struct ContentView: View {
       
       // Discover Tab
       Tab("Discover", systemImage: "safari") {
-        homeView
+        Text("Discover")
       }
 
       // Activity Tab
       Tab("Activity", systemImage: "list.bullet.rectangle.portrait") {
-        homeView
+        activityView
       }
 
       // Finance Tab
@@ -506,7 +506,148 @@ struct ContentView: View {
     }
   }
   
-
+  // MARK: - Activity View
+  
+  private var activityView: some View {
+    NavigationView {
+      ScrollView {
+        VStack(spacing: 0) {
+          // Points Card Section
+          pointsCardSection
+          
+          // Recent Transactions Section
+          recentTransactionsSection
+        }
+        .padding(.top, 16)
+      }
+      .navigationTitle("Activity")
+      .toolbar {
+        ToolbarItem(placement: .primaryAction) {
+          Image(systemName: "list.bullet.rectangle.portrait")
+            .frame(width: 44, height: 44)
+        }
+      }
+    }
+  }
+  
+  // MARK: - Points Card Section
+  
+  private var pointsCardSection: some View {
+    VStack(spacing: 0) {
+      HStack(spacing: 16) {
+        // Gift icon
+        Image(systemName: "gift.fill")
+          .font(.system(size: 32))
+          .foregroundColor(.green)
+        
+        VStack(alignment: .leading, spacing: 4) {
+          Text("You have 1,349 points now")
+            .font(.system(size: 20, weight: .bold))
+            .foregroundColor(.black)
+          
+          Text("Use them to redeem exclusive items!")
+            .font(.system(size: 16))
+            .foregroundColor(.gray)
+        }
+        
+        Spacer()
+      }
+      .padding(20)
+      
+      HStack {
+        Button("Explore GrabRewards") {
+          // Handle explore rewards action
+        }
+        .font(.system(size: 16, weight: .medium))
+        .foregroundColor(.blue)
+        
+        Spacer()
+      }
+      .padding(.horizontal, 20)
+      .padding(.bottom, 20)
+    }
+    .background(Color.white)
+    .cornerRadius(12)
+    .overlay(
+      RoundedRectangle(cornerRadius: 12)
+        .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+    )
+    .padding(.horizontal, 16)
+    .padding(.bottom, 24)
+  }
+  
+  // MARK: - Recent Transactions Section
+  
+  private var recentTransactionsSection: some View {
+    VStack(alignment: .leading, spacing: 0) {
+      HStack {
+        Text("Recent")
+          .font(.system(size: 24, weight: .bold))
+          .foregroundColor(.black)
+        
+        Spacer()
+      }
+      .padding(.horizontal, 16)
+      .padding(.bottom, 16)
+      
+      VStack(spacing: 0) {
+        TransactionItem(
+          icon: "g.circle.fill",
+          iconColor: .green,
+          title: "Sodexo (Online)",
+          subtitle: "18 Jun 2025, 17:24",
+          amount: "S$6.20",
+          amountColor: .black
+        )
+        
+        TransactionItem(
+          icon: "car.fill",
+          iconColor: .green,
+          title: "Golden Star Apartment - Pick Up/Drop Off Gate to Crescent Mall...",
+          subtitle: "Booked by Hà Bảo Khanh\n17 Jun 2025, 19:23",
+          amount: "30.000đ\n+4 points",
+          amountColor: .black
+        )
+        
+        TransactionItem(
+          icon: "g.circle.fill",
+          iconColor: .green,
+          title: "Sodexo (Online)",
+          subtitle: "17 Jun 2025, 17:25",
+          amount: "S$6.20",
+          amountColor: .black
+        )
+        
+        TransactionItem(
+          icon: "plus.circle.fill",
+          iconColor: .green,
+          title: "Top-up to GrabPay Wallet",
+          subtitle: "17 Jun 2025, 17:24",
+          amount: "S$10.00",
+          amountColor: .green
+        )
+        
+        TransactionItem(
+          icon: "car.fill",
+          iconColor: .green,
+          title: "Pho Thin By Sol - 1 Pho Tieu Nam to Golden Star Apartment - Pick...",
+          subtitle: "Booked by Hà Bảo Khanh\n17 Jun 2025, 11:26",
+          amount: "31.000đ\n+4 points",
+          amountColor: .black
+        )
+        
+        TransactionItem(
+          icon: "car.fill",
+          iconColor: .red,
+          title: "Pho Thin By Sol - 1 Pho Tieu Nam to Golden Star Apartment - Pick Up/Drop...",
+          subtitle: "Booked by Hà Bảo Khanh",
+          amount: "",
+          amountColor: .black,
+          isCancelled: true
+        )
+      }
+    }
+  }
 }
 
 // MARK: - Supporting Views
@@ -882,6 +1023,82 @@ struct RecommendedCard: View {
       }
     }
     .frame(width: 150)
+  }
+}
+
+struct TransactionItem: View {
+  let icon: String
+  let iconColor: Color
+  let title: String
+  let subtitle: String
+  let amount: String
+  let amountColor: Color
+  let isCancelled: Bool
+  
+  init(icon: String, iconColor: Color, title: String, subtitle: String, amount: String, amountColor: Color, isCancelled: Bool = false) {
+    self.icon = icon
+    self.iconColor = iconColor
+    self.title = title
+    self.subtitle = subtitle
+    self.amount = amount
+    self.amountColor = amountColor
+    self.isCancelled = isCancelled
+  }
+  
+  var body: some View {
+    HStack(spacing: 16) {
+      // Icon
+      Circle()
+        .fill(iconColor.opacity(0.1))
+        .frame(width: 48, height: 48)
+        .overlay(
+          Image(systemName: icon)
+            .font(.system(size: 20))
+            .foregroundColor(iconColor)
+        )
+      
+      // Content
+      VStack(alignment: .leading, spacing: 4) {
+        if isCancelled {
+          VStack(alignment: .leading, spacing: 2) {
+            Text("Sorry, driver cancelled")
+              .font(.system(size: 16, weight: .medium))
+              .foregroundColor(.red)
+            
+            Text(title)
+              .font(.system(size: 16, weight: .medium))
+              .foregroundColor(.black)
+              .multilineTextAlignment(.leading)
+          }
+        } else {
+          Text(title)
+            .font(.system(size: 16, weight: .medium))
+            .foregroundColor(.black)
+            .multilineTextAlignment(.leading)
+        }
+        
+        Text(subtitle)
+          .font(.system(size: 14))
+          .foregroundColor(.gray)
+          .multilineTextAlignment(.leading)
+      }
+      
+      Spacer()
+      
+      // Amount
+      if !amount.isEmpty {
+        VStack(alignment: .trailing, spacing: 2) {
+          ForEach(amount.components(separatedBy: "\n"), id: \.self) { line in
+            Text(line)
+              .font(.system(size: 16, weight: .medium))
+              .foregroundColor(amountColor)
+              .multilineTextAlignment(.trailing)
+          }
+        }
+      }
+    }
+    .padding(.horizontal, 16)
+    .padding(.vertical, 12)
   }
 }
 
