@@ -41,7 +41,7 @@ struct ContentView: View {
 
       // Finance Tab
       Tab("Finance", systemImage: "dollarsign.circle") {
-        homeView
+        financeView
       }
 
       Tab(role: .search) {
@@ -648,6 +648,234 @@ struct ContentView: View {
       }
     }
   }
+  
+  // MARK: - Finance View
+  
+  private var financeView: some View {
+    NavigationView {
+      ScrollView {
+        VStack(spacing: 0) {
+          // Security Message Section
+          securityMessageSection
+          
+          // Wallet Cards Section
+          walletCardsSection
+          
+          // Quick Actions Section
+          quickActionsSection
+          
+          // Financial Services Section
+          financialServicesSection
+          
+          // Rewards Section
+          rewardsSection
+        }
+        .padding(.top, 16)
+      }
+      .navigationTitle("GrabFin")
+      .toolbar {
+        ToolbarItem(placement: .primaryAction) {
+          Image(systemName: "gearshape")
+            .frame(width: 44, height: 44)
+        }
+      }
+    }
+  }
+  
+  // MARK: - Security Message Section
+  
+  private var securityMessageSection: some View {
+    HStack {
+      Text("Our multi-layered security keeps you safe")
+        .font(.system(size: 16))
+        .foregroundColor(.black)
+      
+      Image(systemName: "arrow.right")
+        .font(.system(size: 16))
+        .foregroundColor(.black)
+      
+      Spacer()
+    }
+    .padding(.horizontal, 16)
+    .padding(.bottom, 24)
+  }
+  
+  // MARK: - Wallet Cards Section
+  
+  private var walletCardsSection: some View {
+    HStack(spacing: 12) {
+      // GXS Savings Account Card
+      VStack(spacing: 12) {
+        HStack {
+          VStack(alignment: .leading, spacing: 4) {
+            Text("Activate")
+              .font(.system(size: 16, weight: .medium))
+              .foregroundColor(.black)
+            
+            Text("GXS Savings Account")
+              .font(.system(size: 16, weight: .bold))
+              .foregroundColor(.black)
+          }
+          
+          Spacer()
+          
+          VStack {
+            HStack {
+              Text("New")
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(.white)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(Color.red)
+                .cornerRadius(12)
+              
+              Spacer()
+            }
+            Spacer()
+          }
+        }
+        
+        Spacer()
+        
+        HStack {
+          Spacer()
+          Image(systemName: "plus")
+            .font(.system(size: 24))
+            .foregroundColor(.gray)
+        }
+      }
+      .padding(16)
+      .frame(height: 180)
+      .frame(maxWidth: .infinity)
+      .background(Color.gray.opacity(0.1))
+      .cornerRadius(16)
+      .overlay(
+        RoundedRectangle(cornerRadius: Constant.cardCornerRadius)
+          .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+      )
+      // GrabPay Wallet Card
+      VStack(alignment: .leading, spacing: 8) {
+        Text("GrabPay Wallet")
+          .font(.system(size: 18, weight: .medium))
+          .foregroundColor(.white)
+
+        Text("S$0.58")
+          .font(.system(size: 32, weight: .bold))
+          .foregroundColor(.white)
+      }
+      .padding(20)
+      .frame(height: 180)
+      .frame(maxWidth: .infinity, alignment: .topLeading)
+      .background(
+        LinearGradient(
+          stops: [
+            Gradient.Stop(color: Color.green, location: 0),
+            Gradient.Stop(color: Color.blue, location: 0.5),
+            Gradient.Stop(color: Color.orange, location: 1),
+          ],
+          startPoint: .topLeading,
+          endPoint: .bottomTrailing
+        )
+      )
+      .cornerRadius(16)
+    }
+    .padding(.horizontal, 16)
+    .padding(.bottom, 32)
+  }
+  
+  // MARK: - Quick Actions Section
+  
+  private var quickActionsSection: some View {
+    HStack(spacing: 32) {
+      QuickActionButton(icon: "plus.circle", title: "Top Up", color: .green)
+      QuickActionButton(icon: "qrcode.viewfinder", title: "Scan to Pay", color: .green)
+      QuickActionButton(icon: "arrow.right.arrow.left", title: "Transfer", color: .green)
+      
+      Spacer()
+    }
+    .padding(.horizontal, 16)
+    .padding(.bottom, 32)
+  }
+  
+  // MARK: - Financial Services Section
+  
+  private var financialServicesSection: some View {
+    VStack(alignment: .leading, spacing: 16) {
+      Text("Financial services")
+        .font(.system(size: 20, weight: .bold))
+        .foregroundColor(.black)
+        .padding(.horizontal, 16)
+      
+      LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 4), spacing: 16) {
+        FinancialServiceItem(
+          icon: "g.circle.fill",
+          iconColor: .purple,
+          title: "FlexiLoan",
+          subtitle: "from 2.88% p.a."
+        )
+        
+        FinancialServiceItem(
+          icon: "cube.box.fill",
+          iconColor: .green,
+          title: "Web3",
+          subtitle: ""
+        )
+        
+        FinancialServiceItem(
+          icon: "umbrella.fill",
+          iconColor: .green,
+          title: "Insurance",
+          subtitle: ""
+        )
+        
+        FinancialServiceItem(
+          icon: "suitcase.fill",
+          iconColor: .green,
+          title: "Travel Cover",
+          subtitle: ""
+        )
+      }
+      .padding(.horizontal, 16)
+    }
+    .padding(.bottom, 32)
+  }
+  
+  // MARK: - Rewards Section
+  
+  private var rewardsSection: some View {
+    VStack(alignment: .leading, spacing: 16) {
+      Text("Get more rewards")
+        .font(.system(size: 20, weight: .bold))
+        .foregroundColor(.black)
+        .padding(.horizontal, 16)
+      
+      HStack(spacing: 16) {
+        VStack(alignment: .leading, spacing: 8) {
+          Text("2 mystery rewards waiting for you")
+            .font(.system(size: 16))
+            .foregroundColor(.black)
+          
+          Button("Unbox now!") {
+            // Handle unbox action
+          }
+          .font(.system(size: 16, weight: .medium))
+          .foregroundColor(.blue)
+        }
+        
+        Spacer()
+        
+        // Gift box illustration placeholder
+        Image(systemName: "gift.fill")
+          .font(.system(size: 40))
+          .foregroundColor(.red)
+      }
+      .padding(20)
+      .background(Color.orange.opacity(0.1))
+      .cornerRadius(16)
+      .padding(.horizontal, 16)
+    }
+    .padding(.bottom, 100)
+  }
 }
 
 // MARK: - Supporting Views
@@ -1023,6 +1251,57 @@ struct RecommendedCard: View {
       }
     }
     .frame(width: 150)
+  }
+}
+
+struct QuickActionButton: View {
+  let icon: String
+  let title: String
+  let color: Color
+  
+  var body: some View {
+    VStack(spacing: 8) {
+      Image(systemName: icon)
+        .font(.system(size: 24))
+        .foregroundColor(color)
+      
+      Text(title)
+        .font(.system(size: 14))
+        .foregroundColor(.black)
+        .multilineTextAlignment(.center)
+    }
+  }
+}
+
+struct FinancialServiceItem: View {
+  let icon: String
+  let iconColor: Color
+  let title: String
+  let subtitle: String
+  
+  var body: some View {
+    VStack(spacing: 8) {
+      Circle()
+        .fill(iconColor.opacity(0.1))
+        .frame(width: 60, height: 60)
+        .overlay(
+          Image(systemName: icon)
+            .font(.system(size: 24))
+            .foregroundColor(iconColor)
+        )
+      
+      VStack(spacing: 2) {
+        Text(title)
+          .font(.system(size: 14, weight: .medium))
+          .foregroundColor(.black)
+        
+        if !subtitle.isEmpty {
+          Text(subtitle)
+            .font(.system(size: 10))
+            .foregroundColor(.gray)
+        }
+      }
+    }
   }
 }
 
