@@ -11,7 +11,7 @@ import SwiftUI
 
 private enum Constant {
   static let headerHeight: CGFloat = 60
-  static let categoryGridSpacing: CGFloat = 20
+  static let categoryGridSpacing: CGFloat = 16
   static let categoryItemSize: CGFloat = 80
   static let cardCornerRadius: CGFloat = 12
   static let searchBarHeight: CGFloat = 44
@@ -19,49 +19,40 @@ private enum Constant {
 }
 
 struct ContentView: View {
-  
+
+  @State private var searchText = ""
+
   var body: some View {
     TabView {
       // Home Tab
-      homeView
-        .tabItem {
-          Image(systemName: "house.fill")
-          Text("Home")
-        }
-        .tag(0)
+      Tab("Home", systemImage: "house") {
+        homeView
+      }
       
       // Discover Tab
-      Text("Discover")
-        .tabItem {
-          Image(systemName: "safari")
-          Text("Discover")
-        }
-        .tag(1)
-      
+      Tab("Discover", systemImage: "safari") {
+        homeView
+      }
+
       // Activity Tab
-      Text("Activity")
-        .tabItem {
-          Image(systemName: "chart.bar.fill")
-          Text("Activity")
-        }
-        .tag(2)
-      
+      Tab("Activity", systemImage: "list.bullet.rectangle.portrait") {
+        homeView
+      }
+
       // Finance Tab
-      Text("Finance")
-        .tabItem {
-          Image(systemName: "dollarsign.circle")
-          Text("Finance")
-        }
-        .tag(3)
-      
-      // Search Tab
-      searchView
-        .tabItem {
-          Image(systemName: "magnifyingglass")
-          Text("Search")
-        }
-        .tag(4)
+      Tab("Finance", systemImage: "dollarsign.circle") {
+        homeView
+      }
+
+      Tab(role: .search) {
+        searchView
+      }
     }
+    .tabViewBottomAccessory(content: {
+      MCAView()
+    })
+    .searchable(text: $searchText)
+    .tabBarMinimizeBehavior(.onScrollDown)
     .accentColor(.green)
   }
   
@@ -72,44 +63,75 @@ struct ContentView: View {
       ScrollView {
         VStack(spacing: 0) {
           // Add top padding to account for floating header
-          Color.clear
-            .frame(height: Constant.headerHeight)
-          
+          LinearGradient(
+            stops: [
+              Gradient.Stop(color: Color.green, location: 0),
+              Gradient.Stop(color: Color.blue, location: 1),
+            ],
+            startPoint: .leading,
+            endPoint: .trailing
+          )
+          .frame(height: 120)
+
           // MARK: - Service Categories
           serviceCategoriesSection
-          
+
           // MARK: - Balance Cards
           balanceCardsSection
-          
+
           // MARK: - Shop Now Section
           shopNowSection
-          
+
           // MARK: - Advertisement Banner
           advertisementSection
-          
+
           // MARK: - Challenges Section
           challengesSection
-          
+
+          // MARK: - Discover Section
+          discoverSection
+
+          // MARK: - Advertisement Banner
+          shopNowSection
+            .padding(.top, 28)
+          advertisementSection
+
+          // MARK: - Challenges Section
+          challengesSection
+
           // MARK: - Discover Section
           discoverSection
         }
       }
+      .ignoresSafeArea(.all, edges: .top)
       .scrollIndicators(.hidden)
-    }
-    .overlay(alignment: .top) {
-      // Floating header
-      headerSection
+      .toolbar {
+        ToolbarItem(placement: .primaryAction) {
+          Image(systemName: "barcode.viewfinder")
+            .frame(width: 44, height: 44)
+        }
+        ToolbarSpacer(.fixed, placement: .primaryAction)
+        ToolbarItem(placement: .primaryAction) {
+          Image(systemName: "person.fill")
+            .frame(width: 44, height: 44)
+        }
+      }
+
     }
     .overlay(alignment: .bottom) {
       HStack {
-        Circle()
-          .fill(Color.blue)
-          .frame(width: 60, height: 60)
-          .overlay(
-            Image(systemName: "mic.fill")
-              .font(.system(size: 24))
-              .foregroundColor(.white)
-          )
+        Button {
+
+        } label: {
+          Image(systemName: "mic.fill")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .padding()
+
+        }
+        .frame(width: 60, height: 60)
+        .foregroundStyle(.white)
+        .glassEffect(.regular.tint(.blue))
         Spacer()
       }
       .padding()
@@ -125,7 +147,7 @@ struct ContentView: View {
         searchHeaderSection
         
         // Search bar
-        searchBarSection
+//        searchBarSection
         
         // Filter tabs
         filterTabsSection
@@ -320,21 +342,17 @@ struct ContentView: View {
         .padding()
       Spacer(minLength: 0)
       // Profile Section
-      Circle()
-        .fill(Color.gray.opacity(0.3))
+      AsyncImage(url: URL(string: "https://pbs.twimg.com/profile_images/1918875154568056832/UYxxcd60_400x400.jpg"), content: { image in
+        image
+          .resizable()
+          .aspectRatio(contentMode: .fit)
+          .clipShape(.circle)
+      }, placeholder: {
+        ProgressView()
+      })
         .frame(width: Constant.profileImageSize, height: Constant.profileImageSize)
-        .overlay(
-          AsyncImage(url: URL(string: "https://pbs.twimg.com/profile_images/1918875154568056832/UYxxcd60_400x400.jpg"), content: { image in
-            image
-              .resizable()
-              .aspectRatio(contentMode: .fit)
-              .clipShape(.circle)
-          }, placeholder: {
-            ProgressView()
-          })
-        )
-        .padding(.horizontal, 16)
-//        .padding(.vertical, 20)
+        .glassEffect()
+        .padding()
     }
     .frame(height: Constant.headerHeight)
     .frame(maxWidth: .infinity)
@@ -486,7 +504,6 @@ struct ContentView: View {
         .padding(.horizontal, 16)
       }
     }
-    .padding(.bottom, 100) // Space for bottom navigation
   }
   
 
@@ -515,7 +532,7 @@ struct ServiceCategoryItem: View {
         )
       
       Text(title)
-        .font(.system(size: 14, weight: .medium))
+        .font(.system(size: 14, weight: .semibold))
         .foregroundColor(.black)
     }
   }
